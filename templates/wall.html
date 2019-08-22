@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Wall</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for ('static', filename='style.css') }}">
+    <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-light" style="background-color: #30fc03;">
+                <div class="col-8">
+                    <h2>CodingDojo Wall</h2>
+                </div>
+                <div class="col-4">
+                    <h3> Welcome, {{session["first_name"]}}!</h3>
+                    <a href="/logout" class="btn btn-primary">Log Out</a>
+                </div>
+        </nav>
+    </header>
+    <div class="container">
+        <div class="row">
+            <div class="your_messages">
+                <h3>{{your_messages}} Messages For You</h3>
+                {% for message in messages %}
+                    <div class="col-10">
+                        <p>{{message["sender_first"]}} said:</p>
+                        <br>
+                        <p>"{{message["msgcnt"]}}"</p>
+                        <form name="trash_form" action="/delete_message" method="POST">
+                            <button type="submit"><i class="icon ion-md-trash"></i></button>
+                            <input type="hidden" name="hidden_message" value={{message["msgid"]}}>
+                        </form>
+
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="send_messages">
+                <h3>Send Messages</h3>
+                <p>You have sent {{num_messages_sent}} messages so far</p>
+                {% for friend in friends %}
+                    {% if not friend["first_name"] == session["first_name"] %}
+                    <form action="/send_message/<{{friend["id"]}}>" method="POST">
+                        <div class="row">
+                            <div class="col-4">
+                                <p>{{friend["first_name"]}}</p>
+                            </div>
+                            <input type="hidden" name="hidden_receiver" value={{friend["id"]}}>
+                            <div class="col-6">
+                                <textarea name="text_area" rows="2"></textarea>
+                            </div>
+                            <div class="col-2">
+                                <input type="submit" value="Send">
+                            </div>
+                        </div>
+                    </form>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

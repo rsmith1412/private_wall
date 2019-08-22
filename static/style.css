@@ -1,0 +1,43 @@
+header {
+    margin-bottom: 30px;
+}
+h2 {
+    margin-left: 20px;
+}
+h3, a, p, textarea, a {
+    display: inline-block;
+}
+nav {
+    border-bottom: 1px solid black;
+}
+form {
+    display: flex;
+    align-items: flex-end;
+}
+a {
+    margin: 0 auto;
+    background-color: blue;
+    color: white;
+    margin-left: 80px;
+}
+button {
+    border: none;
+}
+button:hover {
+    background-color: #f8f8f8;
+}
+.trash_form {
+    display: inline-block;
+}
+.red {
+    color: red;
+}
+.your_messages {
+    width: 50%;
+}
+.send_messages {
+    width: 50%;
+}
+/*.col-4 {
+    display: flex;
+}*/

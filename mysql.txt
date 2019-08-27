@@ -1,0 +1,149 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+-- -----------------------------------------------------
+-- Schema handy_helper
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema handy_helper
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `handy_helper` DEFAULT CHARACTER SET utf8 ;
+-- -----------------------------------------------------
+-- Schema private_wall
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema private_wall
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `private_wall` DEFAULT CHARACTER SET utf8 ;
+USE `handy_helper` ;
+
+-- -----------------------------------------------------
+-- Table `handy_helper`.`users`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `handy_helper`.`users` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `first_name` VARCHAR(255) NULL,
+  `last_name` VARCHAR(255) NULL,
+  `email` VARCHAR(255) NULL,
+  `password` VARCHAR(255) NULL,
+  `created_at` DATETIME NULL DEFAULT NOW(),
+  `updated_at` DATETIME NULL DEFAULT NOW(),
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `handy_helper`.`jobs`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `handy_helper`.`jobs` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `job_name` VARCHAR(255) NULL,
+  `location` VARCHAR(255) NULL,
+  `job_poster_id` INT NOT NULL,
+  `job_accepter_id1` INT NOT NULL,
+  `created_at` DATETIME NULL DEFAULT NOW(),
+  `updated_at` DATETIME NULL DEFAULT NOW(),
+  PRIMARY KEY (`id`),
+  INDEX `fk_jobs_users_idx` (`job_poster_id` ASC),
+  INDEX `fk_jobs_users1_idx` (`job_accepter_id1` ASC),
+  CONSTRAINT `fk_jobs_users`
+    FOREIGN KEY (`job_poster_id`)
+    REFERENCES `handy_helper`.`users` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_jobs_users1`
+    FOREIGN KEY (`job_accepter_id1`)
+    REFERENCES `handy_helper`.`users` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `handy_helper`.`categories`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `handy_helper`.`categories` (
+  `id` INT NOT NULL,
+  `category_name` VARCHAR(255) NULL,
+  `created_at` DATETIME NULL DEFAULT NOW(),
+  `updated_at` DATETIME NULL DEFAULT NOW(),
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `handy_helper`.`jobs_has_categories`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `handy_helper`.`jobs_has_categories` (
+  `jobs_id` INT NOT NULL,
+  `categories_id` INT NOT NULL,
+  PRIMARY KEY (`jobs_id`, `categories_id`),
+  INDEX `fk_jobs_has_categories_categories1_idx` (`categories_id` ASC),
+  INDEX `fk_jobs_has_categories_jobs1_idx` (`jobs_id` ASC),
+  CONSTRAINT `fk_jobs_has_categories_jobs1`
+    FOREIGN KEY (`jobs_id`)
+    REFERENCES `handy_helper`.`jobs` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_jobs_has_categories_categories1`
+    FOREIGN KEY (`categories_id`)
+    REFERENCES `handy_helper`.`categories` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+USE `private_wall` ;
+
+-- -----------------------------------------------------
+-- Table `private_wall`.`users`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `private_wall`.`users` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `first_name` VARCHAR(255) NULL DEFAULT NULL,
+  `last_name` VARCHAR(255) NULL DEFAULT NULL,
+  `email` VARCHAR(255) NULL DEFAULT NULL,
+  `pass_word` VARCHAR(255) NULL DEFAULT NULL,
+  `created_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 16
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `private_wall`.`messages`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `private_wall`.`messages` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `sender_id` INT(11) NOT NULL,
+  `receiver_id` INT(11) NOT NULL,
+  `content` VARCHAR(8000) NULL DEFAULT NULL,
+  `created_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX `fk_messages_users_idx` (`sender_id` ASC),
+  INDEX `fk_messages_users1_idx` (`receiver_id` ASC),
+  CONSTRAINT `fk_messages_users`
+    FOREIGN KEY (`sender_id`)
+    REFERENCES `private_wall`.`users` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_messages_users1`
+    FOREIGN KEY (`receiver_id`)
+    REFERENCES `private_wall`.`users` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 18
+DEFAULT CHARACTER SET = utf8;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
